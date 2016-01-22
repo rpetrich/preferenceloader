@@ -19,6 +19,7 @@ static NSString **pPSTableCellUseEtchedAppearanceKey = NULL;
 
 /* {{{ Locals */
 static BOOL _Firmware_lt_60 = NO;
+static BOOL _Firmware_gt_90 = NO;
 /* }}} */
 
 %hook PrefsListController
@@ -91,7 +92,7 @@ static NSInteger PSSpecifierSort(PSSpecifier *a1, PSSpecifier *a2, void *context
 			NSMutableArray *_specifiers = MSHookIvar<NSMutableArray *>(self, "_specifiers");
 			NSInteger group, row;
 			NSInteger firstindex;
-			if ([self getGroup:&group row:&row ofSpecifierID:_Firmware_lt_60 ? @"General" : @"TWITTER"]) {
+			if ([self getGroup:&group row:&row ofSpecifierID:_Firmware_lt_60 ? @"General" : @"TWITTER"] && !_Firmware_gt_90) {
 				firstindex = [self indexOfGroup:group] + [[self specifiersInGroup:group] count];
 				PLLog(@"Adding to the end of group %d at index %d", group, firstindex);
 			} else {
@@ -123,6 +124,7 @@ static NSInteger PSSpecifierSort(PSSpecifier *a1, PSSpecifier *a2, void *context
 	%init(PrefsListController = targetRootClass);
 
 	_Firmware_lt_60 = kCFCoreFoundationVersionNumber < 793.00;
+	_Firmware_gt_90 = kCFCoreFoundationVersionNumber >= 1240.00;
 	if(([UIDevice instancesRespondToSelector:@selector(isWildcat)] && [[UIDevice currentDevice] isWildcat]) || (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad))
 		%init(iPad);
 
