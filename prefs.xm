@@ -4,6 +4,8 @@
 #import <Preferences/PSTableCell.h>
 #import <substrate.h>
 
+%config(generator=internal)
+
 #import "prefs.h"
 
 #define DEBUG_TAG "libprefs"
